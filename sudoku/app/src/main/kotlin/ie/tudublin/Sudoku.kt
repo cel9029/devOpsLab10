@@ -5,6 +5,9 @@ class Sudoku(rows: List<String>) {
     var solved = false
         private set
 
+    private var iterations = 0                   // Track iterations
+    private val maxIterations = 2_000_000       // Limit before giving up
+
     init {
         require(rows.size == 9 && rows.all { it.length == 9 }) {
             "Grid must be 9 x 9"
@@ -23,10 +26,13 @@ class Sudoku(rows: List<String>) {
 
     private fun placeNumber(pos: Int) {
         if (solved) return
+        if (iterations >= maxIterations) return       // Give up if too many iterations
         if (pos == 81) {
             solved = true
             return
         }
+
+        iterations++   // Increment counter
 
         if (grid[pos] > 0) {
             placeNumber(pos + 1)
